@@ -95,7 +95,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 return new HyperLiquidRestClient(client, serviceProvider.GetRequiredService<ILoggerFactory>(), serviceProvider.GetRequiredService<IOptions<HyperLiquidRestOptions>>());
             }).ConfigurePrimaryHttpMessageHandler((serviceProvider) => {
                 var options = serviceProvider.GetRequiredService<IOptions<HyperLiquidRestOptions>>().Value;
-                return LibraryHelpers.CreateHttpClientMessageHandler(options.Proxy, options.HttpKeepAliveInterval);
+                return LibraryHelpers.CreateHttpClientMessageHandler(options);
             });
             services.Add(new ServiceDescriptor(typeof(IHyperLiquidSocketClient), x => { return new HyperLiquidSocketClient(x.GetRequiredService<IOptions<HyperLiquidSocketOptions>>(), x.GetRequiredService<ILoggerFactory>()); }, socketClientLifeTime ?? ServiceLifetime.Singleton));
 
@@ -111,8 +111,6 @@ namespace Microsoft.Extensions.DependencyInjection
                 x.GetRequiredService<IOptions<HyperLiquidRestOptions>>(),
                 x.GetRequiredService<IOptions<HyperLiquidSocketOptions>>()));
 
-            services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IHyperLiquidRestClient>().SpotApi.SharedClient);
-            services.RegisterSharedRestInterfaces(x => x.GetRequiredService<IHyperLiquidRestClient>().FuturesApi.SharedClient);
             services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IHyperLiquidSocketClient>().SpotApi.SharedClient);
             services.RegisterSharedSocketInterfaces(x => x.GetRequiredService<IHyperLiquidSocketClient>().FuturesApi.SharedClient);
 

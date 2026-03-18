@@ -32,12 +32,7 @@ namespace HyperLiquid.Net
         }
 
         /// <inheritdoc />
-        public bool CanCreateKlineTracker(SharedSymbol symbol, SharedKlineInterval interval)
-        {
-            var client = (_serviceProvider?.GetRequiredService<IHyperLiquidSocketClient>() ?? new HyperLiquidSocketClient());
-            SubscribeKlineOptions klineOptions = symbol.TradingMode == TradingMode.Spot ? client.SpotApi.SharedClient.SubscribeKlineOptions : client.FuturesApi.SharedClient.SubscribeKlineOptions;
-            return klineOptions.IsSupported(interval);
-        }
+        public bool CanCreateKlineTracker(SharedSymbol symbol, SharedKlineInterval interval) => false;
 
         /// <inheritdoc />
         public bool CanCreateTradeTracker(SharedSymbol symbol) => true;
@@ -45,31 +40,7 @@ namespace HyperLiquid.Net
         /// <inheritdoc />
         public IKlineTracker CreateKlineTracker(SharedSymbol symbol, SharedKlineInterval interval, int? limit = null, TimeSpan? period = null)
         {
-            var restClient = _serviceProvider?.GetRequiredService<IHyperLiquidRestClient>() ?? new HyperLiquidRestClient();
-            var socketClient = _serviceProvider?.GetRequiredService<IHyperLiquidSocketClient>() ?? new HyperLiquidSocketClient();
-
-            IKlineRestClient sharedRestClient;
-            IKlineSocketClient sharedSocketClient;
-            if (symbol.TradingMode == TradingMode.Spot)
-            {
-                sharedRestClient = restClient.SpotApi.SharedClient;
-                sharedSocketClient = socketClient.SpotApi.SharedClient;
-            }
-            else
-            {
-                sharedRestClient = restClient.FuturesApi.SharedClient;
-                sharedSocketClient = socketClient.FuturesApi.SharedClient;
-            }
-
-            return new KlineTracker(
-                _serviceProvider?.GetRequiredService<ILoggerFactory>().CreateLogger(restClient.Exchange),
-                sharedRestClient,
-                sharedSocketClient,
-                symbol,
-                interval,
-                limit,
-                period
-                );
+            throw new NotSupportedException("Kline trackers are not available for the local HyperLiquid client build.");
         }
         /// <inheritdoc />
         public ITradeTracker CreateTradeTracker(SharedSymbol symbol, int? limit = null, TimeSpan? period = null)

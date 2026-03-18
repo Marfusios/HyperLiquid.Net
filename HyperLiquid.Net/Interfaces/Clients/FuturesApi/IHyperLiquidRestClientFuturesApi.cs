@@ -26,9 +26,5 @@ namespace HyperLiquid.Net.Interfaces.Clients.FuturesApi
         /// <see cref="IHyperLiquidRestClientFuturesApiTrading"/>
         public IHyperLiquidRestClientFuturesApiTrading Trading { get; }
 
-        /// <summary>
-        /// Get the shared rest requests client. This interface is shared with other exchanges to allow for a common implementation for different exchanges.
-        /// </summary>
-        public IHyperLiquidRestClientFuturesApiShared SharedClient { get; }
     }
 }

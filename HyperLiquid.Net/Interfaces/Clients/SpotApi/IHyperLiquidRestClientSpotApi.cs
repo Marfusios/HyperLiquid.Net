@@ -26,9 +26,5 @@ namespace HyperLiquid.Net.Interfaces.Clients.SpotApi
         /// <see cref="IHyperLiquidRestClientSpotApiTrading"/>
         public IHyperLiquidRestClientSpotApiTrading Trading { get; }
 
-        /// <summary>
-        /// Get the shared rest requests client. This interface is shared with other exchanges to allow for a common implementation for different exchanges.
-        /// </summary>
-        public IHyperLiquidRestClientSpotApiShared SharedClient { get; }
     }
 }

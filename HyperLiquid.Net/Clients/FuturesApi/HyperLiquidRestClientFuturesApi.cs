@@ -39,8 +39,5 @@ namespace HyperLiquid.Net.Clients.FuturesApi
         /// <inheritdoc />
         protected override Task<WebCallResult<DateTime>> GetServerTimestampAsync() => throw new NotImplementedException();
 
-        /// <inheritdoc />
-        public IHyperLiquidRestClientFuturesApiShared SharedClient => this;
-
     }
 }

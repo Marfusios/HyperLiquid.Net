@@ -155,9 +155,6 @@
         <member name="M:HyperLiquid.Net.Clients.FuturesApi.HyperLiquidRestClientFuturesApi.GetServerTimestampAsync">
             <inheritdoc />
         </member>
-        <member name="P:HyperLiquid.Net.Clients.FuturesApi.HyperLiquidRestClientFuturesApi.SharedClient">
-            <inheritdoc />
-        </member>
         <member name="T:HyperLiquid.Net.Clients.FuturesApi.HyperLiquidRestClientFuturesApiAccount">
             <inheritdoc />
         </member>
@@ -339,9 +336,6 @@
             <inheritdoc />
         </member>
         <member name="M:HyperLiquid.Net.Clients.SpotApi.HyperLiquidRestClientSpotApi.GetServerTimestampAsync">
-            <inheritdoc />
-        </member>
-        <member name="P:HyperLiquid.Net.Clients.SpotApi.HyperLiquidRestClientSpotApi.SharedClient">
             <inheritdoc />
         </member>
         <member name="T:HyperLiquid.Net.Clients.SpotApi.HyperLiquidRestClientSpotApiAccount">
@@ -2723,11 +2717,6 @@
             </summary>
             <see cref="T:HyperLiquid.Net.Interfaces.Clients.FuturesApi.IHyperLiquidRestClientFuturesApiTrading"/>
         </member>
-        <member name="P:HyperLiquid.Net.Interfaces.Clients.FuturesApi.IHyperLiquidRestClientFuturesApi.SharedClient">
-            <summary>
-            Get the shared rest requests client. This interface is shared with other exchanges to allow for a common implementation for different exchanges.
-            </summary>
-        </member>
         <member name="T:HyperLiquid.Net.Interfaces.Clients.FuturesApi.IHyperLiquidRestClientFuturesApiAccount">
             <summary>
             HyperLiquid futures account endpoints. Account endpoints include balance info, withdraw/deposit info and requesting and account settings
@@ -2850,11 +2839,6 @@
             </summary>
             <param name="dex">DEX name, for example `xyz`, null for default Perp DEX</param>
             <param name="ct">Cancellation token</param>
-        </member>
-        <member name="T:HyperLiquid.Net.Interfaces.Clients.FuturesApi.IHyperLiquidRestClientFuturesApiShared">
-            <summary>
-            Shared interface for futures rest API usage
-            </summary>
         </member>
         <member name="T:HyperLiquid.Net.Interfaces.Clients.FuturesApi.IHyperLiquidRestClientFuturesApiTrading">
             <summary>
@@ -3047,11 +3031,6 @@
             </summary>
             <see cref="T:HyperLiquid.Net.Interfaces.Clients.SpotApi.IHyperLiquidRestClientSpotApiTrading"/>
         </member>
-        <member name="P:HyperLiquid.Net.Interfaces.Clients.SpotApi.IHyperLiquidRestClientSpotApi.SharedClient">
-            <summary>
-            Get the shared rest requests client. This interface is shared with other exchanges to allow for a common implementation for different exchanges.
-            </summary>
-        </member>
         <member name="T:HyperLiquid.Net.Interfaces.Clients.SpotApi.IHyperLiquidRestClientSpotApiAccount">
             <summary>
             HyperLiquid spot account endpoints. Account endpoints include balance info, withdraw/deposit info and requesting and account settings
@@ -3232,11 +3211,6 @@
             </summary>
             <param name="assetId">The asset id</param>
             <param name="ct">Cancellation token</param>
-        </member>
-        <member name="T:HyperLiquid.Net.Interfaces.Clients.SpotApi.IHyperLiquidRestClientSpotApiShared">
-            <summary>
-            Shared interface for spot rest API usage
-            </summary>
         </member>
         <member name="T:HyperLiquid.Net.Interfaces.Clients.SpotApi.IHyperLiquidRestClientSpotApiTrading">
             <summary>

@@ -39,8 +39,5 @@ namespace HyperLiquid.Net.Clients.SpotApi
         /// <inheritdoc />
         protected override Task<WebCallResult<DateTime>> GetServerTimestampAsync() => throw new NotImplementedException();
 
-        /// <inheritdoc />
-        public IHyperLiquidRestClientSpotApiShared SharedClient => this;
-
     }
 }

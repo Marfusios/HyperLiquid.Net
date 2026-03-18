@@ -397,3 +397,5 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+HyperLiquid.Net/obj-codex/
