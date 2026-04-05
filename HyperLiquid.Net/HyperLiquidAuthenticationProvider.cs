@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
 using System.Security.Cryptography;
 
 namespace HyperLiquid.Net
@@ -58,8 +59,24 @@ namespace HyperLiquid.Net
             }
         };
 
+        private static long _lastNonce;
+
         public HyperLiquidAuthenticationProvider(ApiCredentials credentials) : base(credentials)
         {
+        }
+
+        private static long GetUniqueMillisecondNonce(RestApiClient apiClient)
+        {
+            long candidate;
+            long previous;
+            do
+            {
+                candidate = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+                previous = Interlocked.Read(ref _lastNonce);
+                if (candidate <= previous)
+                    candidate = previous + 1;
+            } while (Interlocked.CompareExchange(ref _lastNonce, candidate, previous) != previous);
+            return candidate;
         }
 
         public override void ProcessRequest(RestApiClient apiClient, RestRequestConfiguration request)
@@ -68,7 +85,7 @@ namespace HyperLiquid.Net
                 return;
 
             var action = (Dictionary<string, object>)request.BodyParameters!["action"];
-            var nonce = action.TryGetValue("time", out var time) ? (long)time : action.TryGetValue("nonce", out var n) ? (long)n : GetMillisecondTimestampLong(apiClient);
+            var nonce = action.TryGetValue("time", out var time) ? (long)time : action.TryGetValue("nonce", out var n) ? (long)n : GetUniqueMillisecondNonce(apiClient);
             request.BodyParameters!.Add("nonce", nonce);
             if (action.TryGetValue("signatureChainId", out var chainId))
             {
