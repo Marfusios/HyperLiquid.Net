@@ -5,6 +5,7 @@ using HyperLiquid.Net.Objects.Models;
 using HyperLiquid.Net.Objects.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -99,6 +100,16 @@ namespace HyperLiquid.Net.Utils
         {
             if (symbolName == "UnitTest")
                 return new CallResult<int>(1);
+
+            if (symbolName.StartsWith("#", StringComparison.Ordinal))
+            {
+                if (int.TryParse(symbolName.Substring(1), NumberStyles.None, CultureInfo.InvariantCulture, out var encoding)
+                    && encoding <= int.MaxValue - 100000000 && encoding % 10 <= 1
+                    && symbolName.Substring(1) == encoding.ToString(CultureInfo.InvariantCulture))
+                    return new CallResult<int>(100000000 + encoding);
+
+                return new CallResult<int>(new ServerError(new ErrorInfo(ErrorType.UnknownSymbol, "Invalid outcome coin")));
+            }
 
             if (SymbolIsExchangeSpotSymbol(symbolName))
             {
