@@ -2,6 +2,7 @@
 using CryptoExchange.Net.Clients;
 using CryptoExchange.Net.Objects;
 using HyperLiquid.Net.Clients.BaseApi;
+using HyperLiquid.Net.Objects;
 using HyperLiquid.Net.Signing;
 using HyperLiquid.Net.Utils;
 using System;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace HyperLiquid.Net
 {
@@ -84,6 +86,8 @@ namespace HyperLiquid.Net
             if (!request.Authenticated)
                 return;
 
+            var timing = HyperLiquidRequestTiming.Current;
+            var preparationStarted = timing == null ? 0 : Stopwatch.GetTimestamp();
             var action = (Dictionary<string, object>)request.BodyParameters!["action"];
             var nonce = action.TryGetValue("time", out var time) ? (long)time : action.TryGetValue("nonce", out var n) ? (long)n : GetUniqueMillisecondNonce(apiClient);
             request.BodyParameters!.Add("nonce", nonce);
@@ -106,13 +110,7 @@ namespace HyperLiquid.Net
                 var msg = EncodeEip721(userActions, types, action);
                 var keccakSigned = BytesToHexString(SignKeccak(msg));
 
-                Dictionary<string, object> signature;
-                if (HyperLiquidExchange.SignRequestDelegate != null)
-                    signature = HyperLiquidExchange.SignRequestDelegate(keccakSigned, _credentials.Secret);
-                else
-                    signature = SignRequest(keccakSigned, _credentials.Secret);
-
-                request.BodyParameters["signature"] = signature;
+                request.BodyParameters["signature"] = SignWithTiming(keccakSigned, timing, preparationStarted);
             }
             else
             {
@@ -138,13 +136,25 @@ namespace HyperLiquid.Net
                 var msg = EncodeEip721(_domain, _messageTypes, phantomAgent);
                 var keccakSigned = BytesToHexString(SignKeccak(msg));
 
-                Dictionary<string, object> signature;
-                if (HyperLiquidExchange.SignRequestDelegate != null)
-                    signature = HyperLiquidExchange.SignRequestDelegate(keccakSigned, _credentials.Secret);
-                else
-                    signature = SignRequest(keccakSigned, _credentials.Secret);
+                request.BodyParameters["signature"] = SignWithTiming(keccakSigned, timing, preparationStarted);
+            }
+        }
 
-                request.BodyParameters["signature"] = signature;
+        private Dictionary<string, object> SignWithTiming(string request, HyperLiquidRequestTiming? timing, long preparationStarted)
+        {
+            var started = timing == null ? 0 : Stopwatch.GetTimestamp();
+            if (timing != null)
+                timing.AuthenticationPreparationTicks += started - preparationStarted;
+            try
+            {
+                return HyperLiquidExchange.SignRequestDelegate != null
+                    ? HyperLiquidExchange.SignRequestDelegate(request, _credentials.Secret)
+                    : SignRequest(request, _credentials.Secret);
+            }
+            finally
+            {
+                if (timing != null)
+                    timing.SigningTicks += Stopwatch.GetTimestamp() - started;
             }
         }
 
