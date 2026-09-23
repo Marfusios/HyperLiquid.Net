@@ -25,7 +25,7 @@ namespace HyperLiquid.Net.Objects.Options
         }
 
         /// <summary>
-        /// The builder fee percentage to apply to orders. This refers to a fee percentage being paid to the developer to support development. Defaults to null/0. Can be between 0.001% and 0.1%.<br />
+        /// The builder fee percentage to apply to orders. Defaults to null, omitting builder attribution. An explicit zero includes the builder code without charging a fee. Positive fees can be between 0.001% and 0.1%.<br />
         /// If set to a non-null value the address has to be whitelisted using <see cref="Clients.SpotApi.HyperLiquidRestClientSpotApiAccount.ApproveBuilderFeeAsync(System.Threading.CancellationToken)">restClient.SpotApi.Account.ApproveBuilderFeeAsync</see>
         /// </summary>
         public decimal? BuilderFeePercentage { get; set; }
